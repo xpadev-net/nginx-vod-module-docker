@@ -31,17 +31,16 @@ jobs:
         run: |
           set -euo pipefail
 
-          NGINX_VERSION="$(curl -fsSL https://nginx.org/en/download.html | \
-            awk 'match($0, /nginx-([0-9]+\.[0-9]+\.[0-9]+)\.tar\.gz/, a) { print a[1]; exit }')"
+          NGINX_RELEASE="$(curl -fsSL https://api.github.com/repos/nginx/nginx/releases/latest \
+            | jq -r '.tag_name // empty')"
+          NGINX_VERSION="${NGINX_RELEASE#release-}"
           if [ -z "$NGINX_VERSION" ]; then
-            echo "nginx version not found" >&2
+            echo "nginx release not found" >&2
             exit 1
           fi
 
-          MODULE_REF="$(curl -fsSL https://api.github.com/repos/kaltura/nginx-vod-module/commits/main | jq -r '.sha // empty')"
-          if [ -z "$MODULE_REF" ]; then
-            MODULE_REF="$(curl -fsSL https://api.github.com/repos/kaltura/nginx-vod-module/commits/master | jq -r '.sha // empty')"
-          fi
+          MODULE_REF="$(curl -fsSL https://api.github.com/repos/kaltura/nginx-vod-module/commits/HEAD \
+            | jq -r '.sha // empty')"
           if [ -z "$MODULE_REF" ]; then
             echo "nginx-vod-module ref not found" >&2
             exit 1
