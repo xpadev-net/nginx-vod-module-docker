@@ -53,8 +53,6 @@ RUN ./configure \
     --add-module=../nginx-vod-module \
     --with-file-aio \
     --with-threads \
-    --with-cc-opt='-O3 -mpopcnt' \
-    --with-cc-opt='-DNGX_VOD_MAX_TRACK_COUNT=256 -mavx2' \
     --with-http_ssl_module \
     --with-http_sub_module \
     --with-http_gzip_static_module \
@@ -79,7 +77,7 @@ RUN ./configure \
     --http-scgi-temp-path=/var/lib/nginx/scgi \
     --http-uwsgi-temp-path=/var/lib/nginx/uwsgi \
     --with-pcre-jit \
-    --with-cc-opt='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -fstack-protector-strong -Wformat -Werror=format-security -fPIC -Wdate-time -D_FORTIFY_SOURCE=2' \
+    --with-cc-opt='-g -O2 -flto=auto -ffat-lto-objects -flto=auto -ffat-lto-objects -fstack-protector-strong -Wformat -Werror=format-security -fPIC -Wdate-time -D_FORTIFY_SOURCE=2 -O3 -mpopcnt -DNGX_VOD_MAX_TRACK_COUNT=256 -mavx2' \
     --with-ld-opt='-Wl,-Bsymbolic-functions -flto=auto -ffat-lto-objects -flto=auto -Wl,-z,relro -Wl,-z,now -fPIC' \
     --with-compat \
     --with-debug \
