@@ -39,7 +39,7 @@ jobs:
             exit 1
           fi
 
-          MODULE_REF="$(curl -fsSL https://api.github.com/repos/kaltura/nginx-vod-module/commits/HEAD \
+          MODULE_REF="$(curl -fsSL https://api.github.com/repos/dio-az/nginx-vod-module/commits/HEAD \
             | jq -r '.sha // empty')"
           if [ -z "$MODULE_REF" ]; then
             echo "nginx-vod-module ref not found" >&2
@@ -47,12 +47,14 @@ jobs:
           fi
 
           MODULE_SHA="${MODULE_REF:0:7}"
-          TAG="nginx-${NGINX_VERSION}-vod-${MODULE_SHA}"
+          REPOSITORY_SHA="${GITHUB_SHA:0:7}"
+          TAG="nginx-${NGINX_VERSION}-vod-${MODULE_SHA}-repo-${REPOSITORY_SHA}"
           IMAGE_PATH="${REGISTRY}/${GITHUB_REPOSITORY,,}"
 
           echo "nginx_version=$NGINX_VERSION" >> "$GITHUB_OUTPUT"
           echo "module_ref=$MODULE_REF" >> "$GITHUB_OUTPUT"
           echo "module_short=$MODULE_SHA" >> "$GITHUB_OUTPUT"
+          echo "repository_short=$REPOSITORY_SHA" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "image_path=$IMAGE_PATH" >> "$GITHUB_OUTPUT"
 
@@ -90,6 +92,7 @@ jobs:
           labels: |
             org.opencontainers.image.title=nginx-vod-module-docker
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
