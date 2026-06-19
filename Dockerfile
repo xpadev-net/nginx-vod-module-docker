@@ -41,7 +41,7 @@ RUN NGINX_LATEST=$(wget -qO- http://nginx.org/en/download.html | \
 
 # nginx-vod-moduleのソースコードをクローン
 WORKDIR /usr/local/src
-RUN git clone https://github.com/kaltura/nginx-vod-module.git && \
+RUN git clone https://github.com/dio-az/nginx-vod-module.git && \
     cd nginx-vod-module && \
     if [ -n "$NGX_VOD_REF" ]; then \
         git checkout "$NGX_VOD_REF"; \

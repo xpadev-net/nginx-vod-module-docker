@@ -123,7 +123,7 @@ vod_align_segments_to_key_frames on;
 
 ## 参考資料
 
-- [nginx-vod-module公式リポジトリ](https://github.com/kaltura/nginx-vod-module)
+- [nginx-vod-module公式リポジトリ](https://github.com/dio-az/nginx-vod-module)
 - [Qiita記事: nginx-vod-moduleでon-the-flyなhls配信環境を作る](https://qiita.com/xpadev-net/items/714eddf2ceb3d0ef78a7)
 
 ## ライセンス
