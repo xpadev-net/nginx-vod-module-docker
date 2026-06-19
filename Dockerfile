@@ -17,6 +17,11 @@ RUN apt-get update && \
     libgd-dev \
     libxml2 \
     libxml2-dev \
+    ffmpeg \
+    libavcodec-dev \
+    libavfilter-dev \
+    libavutil-dev \
+    libswscale-dev \
     uuid-dev \
     git \
     wget \
