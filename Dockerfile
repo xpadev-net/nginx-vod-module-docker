@@ -1,6 +1,10 @@
 # ビルドステージ
 FROM debian:trixie-slim AS builder
 
+# Workflowから受け取る値（未指定時は既存ロジックにフォールバック）
+ARG NGINX_VERSION=""
+ARG NGX_VOD_REF=""
+
 # 必要なパッケージのインストール
 RUN apt-get update && \
     apt-get install -y \
@@ -25,7 +29,9 @@ RUN NGINX_LATEST=$(wget -qO- http://nginx.org/en/download.html | \
     grep -oE 'nginx-[0-9]+\.[0-9]+\.[0-9]+\.tar\.gz' | \
     head -1 | \
     sed 's/nginx-\(.*\)\.tar\.gz/\1/') && \
-    if [ -z "$NGINX_LATEST" ]; then \
+    if [ -n "$NGINX_VERSION" ]; then \
+        NGINX_LATEST="$NGINX_VERSION"; \
+    elif [ -z "$NGINX_LATEST" ]; then \
         NGINX_LATEST="1.25.2"; \
     fi && \
     echo "Using nginx version: $NGINX_LATEST" && \
@@ -35,7 +41,11 @@ RUN NGINX_LATEST=$(wget -qO- http://nginx.org/en/download.html | \
 
 # nginx-vod-moduleのソースコードをクローン
 WORKDIR /usr/local/src
-RUN git clone https://github.com/kaltura/nginx-vod-module.git
+RUN git clone https://github.com/kaltura/nginx-vod-module.git && \
+    cd nginx-vod-module && \
+    if [ -n "$NGX_VOD_REF" ]; then \
+        git checkout "$NGX_VOD_REF"; \
+    fi
 
 # NGINXのビルドとインストール
 WORKDIR /usr/local/src/nginx
@@ -117,4 +127,3 @@ EXPOSE 80 443
 # nginxを起動
 ENTRYPOINT ["/usr/share/nginx/sbin/nginx"]
 CMD ["-g", "daemon off;"]
-
